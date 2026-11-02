@@ -37,10 +37,15 @@ export async function getSitemapEntries() {
 }
 
 /* ── Work ── */
+// 번호를 한 트랜잭션으로 바꾸는 동안 대표 문서의 번호와 목록을 같은 쿼리에서 읽는다.
+const migrated = '*[_id == "8706b0da-ca5e-4561-aeb7-2659aec46d11"][0].sortOrder == 160';
+
 export async function getWorks(category?: string) {
   const filter = category ? `&& category == $category` : "";
+  const rows = `*[_type == "work" ${filter}]`;
   return client.fetch(
-    `*[_type == "work" ${filter}] | order(sortOrder asc, _createdAt desc) {
+    `select(${migrated} => ${rows} | order(coalesce(sortOrder, 0) desc, _createdAt desc),
+      ${rows} | order(sortOrder asc, _createdAt desc))[] {
       _id, title, slug, client, category, thumbnail, year, featured
     }`,
     category ? { category } : {}
@@ -59,8 +64,10 @@ export async function getWork(slug: string) {
 }
 
 export async function getFeaturedWorks() {
+  const rows = '*[_type == "work" && featured == true]';
   return client.fetch(
-    `*[_type == "work" && featured == true] | order(sortOrder asc) {
+    `select(${migrated} => ${rows} | order(coalesce(sortOrder, 0) desc, _createdAt desc),
+      ${rows} | order(sortOrder asc))[] {
       _id, title, slug, client, category, thumbnail, year
     }`
   );
