@@ -109,7 +109,7 @@ export default async function WorkPage({
                         <span className="text-sm text-ink/40">{work.client}</span>
                       )}
                       <span
-                        className={`text-[11px] px-2.5 py-0.5 rounded-full ${colors.bg}`}
+                        className={`text-[11px] px-2.5 py-0.5 rounded-full capitalize ${colors.bg}`}
                       >
                         {work.category}
                       </span>

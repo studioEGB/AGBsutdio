@@ -138,7 +138,7 @@ export default async function Home() {
                         </span>
                       )}
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full ${
+                        className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${
                           work.category === "documentary"
                             ? "bg-accent-doc"
                             : work.category === "social"
